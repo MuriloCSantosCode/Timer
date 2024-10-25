@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Timer</title>
+    <style>
+        .style_button {
+            line-height: 2;
+            font-size: 50px;
+            background-color: rgb(43, 226, 144);
+            color: rgb(255, 255, 255);
+            display: inline-block;
+        }
+        .style_text {
+            font-size: 100px;
+        }
+    </style>
+    <script>
+        var elapsedTime = 0;
+        var intervalId;
+        var pausedTime = 0;  
+        var mil = 0, sec = 0, min = 0, hour = 0, days = 0;
+
+        function stoptimer() {
+            clearInterval(intervalId); 
+            intervalId = null;
+            elapsedTime = 0;           
+            pausedTime = 0;            
+            updateDisplay();           
+        }
+
+        function pausetime() {
+            clearInterval(intervalId);
+            intervalId = null;
+            pausedTime = elapsedTime; 
+        }
+
+        function start() {
+            if (intervalId) return;
+            var startTime = Date.now() - pausedTime;
+            intervalId = setInterval(myTimer, 10);
+
+            function myTimer() {
+                var currentTime = Date.now();
+                elapsedTime = currentTime - startTime;
+
+                mil = Math.floor(elapsedTime % 1000);
+                sec = Math.floor((elapsedTime / 1000) % 60);
+                min = Math.floor((elapsedTime / (1000 * 60)) % 60);
+                hour = Math.floor((elapsedTime / (1000 * 60 * 60)) % 24);
+                days = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
+
+                
+                updateDisplay();
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('timemil').innerHTML = String(mil).padStart(3, '0');
+            document.getElementById('timesec').innerHTML = String(sec).padStart(2, '0');
+            document.getElementById('timemin').innerHTML = String(min).padStart(2, '0');
+            document.getElementById('timehour').innerHTML = String(hour).padStart(2, '0');
+            document.getElementById('timeday').innerHTML = String(days).padStart(2, '0');
+        }
+    </script>  
+</head>
+<body>
+    <div class="style_text">
+        <span id="timeday">00</span>:
+        <span id="timehour">00</span>:
+        <span id="timemin">00</span>:
+        <span id="timesec">00</span>:
+        <span id="timemil">000</span>
+    </div>
+    <button class="style_button" onclick="start()">Start</button>
+    <button class="style_button" onclick="pausetime()">Pause</button>
+    <button class="style_button" onclick="stoptimer()">Stop</button>
+</body>
+</html>
